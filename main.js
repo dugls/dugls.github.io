@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "p {\n    font-size: 13px;\n}\n\nh1 {\n    margin-left: 4%;\n}\n\n.card {\n    box-shadow: 2px -2px 10px 0px rgba(49, 50, 50, 0.73);\n}\n\n.commentBox .form-group:first-child,\n.actionBox .form-group:first-child {\n    width: 80%;\n}\n\n.commentBox .form-group:nth-child(2),\n.actionBox .form-group:nth-child(2) {\n    width: 100%;\n}\n\n.actionBox .form-group * {\n    width: 80%;\n}\n\n.commentList {\n    padding: 0;\n    list-style: none;\n    overflow: auto;\n    text-align: justify\n}\n\n.commentList li {\n    margin: 0;\n    margin-top: 10px;\n}\n\n.commentList li>div {\n    display: table-cell;\n}\n\n.commenterImage {\n    width: 30px;\n    margin-right: 5px;\n    height: 100%;\n    float: left;\n}\n\n.commenterImage img {\n    width: 100%;\n    border-radius: 50%;\n}\n\n.commentText p,\n{\n    width: 100%;\n}\n\n.actionBox {\n    border-top: 1px dotted #bbb;\n    padding: 10px;\n}\n\ntextarea {\n    width: 80%;\n}\n\n#square {\n    width: 40px;\n    height: 40px;\n    background: rgb(192, 86, 15);\n}\n\n#square2 {\n    width: 40px;\n    height: 40px;\n    background: rgb(73, 100, 189);\n}"
+module.exports = ".header {\n    margin-left: 4%;\n    font-size: 42px;\n    font-weight: 100;\n}\n\nh1 {\n    margin-left: 4%;\n}\n\n.card {\n    box-shadow: 2px -2px 10px 0px rgba(49, 50, 50, 0.73);\n}\n\n.commentBox .form-group:first-child,\n.actionBox .form-group:first-child {\n    width: 80%;\n}\n\n.commentBox .form-group:nth-child(2),\n.actionBox .form-group:nth-child(2) {\n    width: 100%;\n}\n\n.actionBox .form-group * {\n    width: 80%;\n}\n\n.commentList {\n    padding: 0;\n    list-style: none;\n    overflow: auto;\n    text-align: justify\n}\n\n.commentList li {\n    margin: 0;\n    margin-top: 10px;\n}\n\n.commentList li>div {\n    display: table-cell;\n}\n\n.commenterImage {\n    width: 30px;\n    margin-right: 5px;\n    height: 100%;\n    float: left;\n}\n\n.commenterImage img {\n    width: 100%;\n    border-radius: 50%;\n}\n\n.commentText p,\n{\n    width: 100%;\n}\n\n.actionBox {\n    border-top: 1px dotted #bbb;\n    padding: 10px;\n}\n\ntextarea {\n    width: 80%;\n}\n\n#square {\n    width: 40px;\n    height: 40px;\n    background: rgb(192, 86, 15);\n}\n\n#square2 {\n    width: 40px;\n    height: 40px;\n    background: rgb(73, 100, 189);\n}"
 
 /***/ }),
 
@@ -41,7 +41,7 @@ module.exports = "p {\n    font-size: 13px;\n}\n\nh1 {\n    margin-left: 4%;\n}\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"col-md-5\">\n    <div class=\"card\" style=\"width: 30rem;\">\n        <h1>Comments # {{items.length}} </h1>\n        <div class=\"card-body\">\n\n            <ul class=\"commentList\" *ngFor=\"let comment of comments\">\n                <li>\n                    <div class=\"commenterImage\" id=\"square\">\n\n                    </div>\n                    <div class=\"commentText\">\n                        <p class=\"\">{{comment}}</p>\n                    </div>\n                </li>\n            </ul>\n            <div class=\"commenterImage\" id=\"square2\">\n\n            </div>\n            <div class=\"form-group\">\n                <textarea class=\"form-control\" [(ngModel)]=\"filterName\" #comment rows=\"3\" cols=\"40\" (keydown.control.enter)=\"addComment(comment.value)\" id=\"comment\"></textarea>\n            </div>\n\n        </div>\n    </div>"
+module.exports = "<div class=\"col-md-5\">\n    <div class=\"card\" style=\"width: 30rem;\">\n        <h1>Comments # {{items.length}}</h1>\n        <div class=\"card-body\">\n\n            <ul class=\"commentList\" *ngFor=\"let comment of comments\">\n                <li>\n                    <div class=\"commenterImage\" id=\"square\">\n\n                    </div>\n                    <div class=\"commentText\">\n                        <p class=\"\">{{comment}}</p>\n                    </div>\n                </li>\n            </ul>\n            <div class=\"commenterImage\" id=\"square2\">\n\n            </div>\n            <div class=\"form-group\">\n                <textarea class=\"form-control\" [(ngModel)]=\"filterName\" #comment rows=\"3\" cols=\"40\" (keydown.control.enter)=\"addComment(comment.value)\" id=\"comment\"></textarea>\n            </div>\n\n        </div>\n    </div>"
 
 /***/ }),
 
@@ -82,18 +82,10 @@ var AppCommentsComponent = /** @class */ (function () {
     };
     AppCommentsComponent.prototype.ngOnInit = function () {
         var _this = this;
-        if (localStorage.getItem('items') === null) {
-            this.comments = [];
-        }
-        else {
-            this.subscription = this.getItems.getItem().subscribe(function (item) {
-                _this.comments = item.comments;
-                var items = JSON.parse(localStorage.getItem('items'));
-                item.filter(function (data) {
-                    console.log(data);
-                });
-            });
-        }
+        this.subscription = this.getItems.getItem().subscribe(function (item) {
+            _this.comments = item.comments;
+            _this.items = JSON.parse(localStorage.getItem('items'));
+        });
     };
     AppCommentsComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -230,7 +222,7 @@ var AppItemsComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".left {\n    background-color: #3a1070;\n    color: white;\n    height: 100%;\n}\n\napp-app-items,\napp-app-comments {\n    margin-top: 1%;\n}\n\n.container-fluid {\n    height: 100%;\n}"
+module.exports = ".left {\n    background-color: #1c1429e3;\n    color: white;\n    height: 100%;\n    font-family: 'Open Sans Condensed', sans-serif;\n}\n\napp-app-items,\napp-app-comments {\n    margin-top: 1%;\n}\n\n.container-fluid {\n    height: 100%;\n}"
 
 /***/ }),
 
