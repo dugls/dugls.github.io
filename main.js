@@ -41,7 +41,7 @@ module.exports = "p {\n    font-size: 13px;\n}\n\nh1 {\n    margin-left: 4%;\n}\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"col-md-5\">\n    <div class=\"card\" style=\"width: 30rem;\">\n        <h1>Comments #{{items}}</h1>\n        <div class=\"card-body\">\n\n            <ul class=\"commentList\" *ngFor=\"let comment of comments\">\n                <li>\n                    <div class=\"commenterImage\" id=\"square\">\n\n                    </div>\n                    <div class=\"commentText\">\n                        <p class=\"\">{{comment}}</p>\n                    </div>\n                </li>\n            </ul>\n            <div class=\"commenterImage\" id=\"square2\">\n\n            </div>\n            <div class=\"form-group\">\n                <textarea class=\"form-control\" [(ngModel)]=\"filterName\" #comment rows=\"3\" cols=\"40\" (keydown.control.enter)=\"addComment(comment.value)\" id=\"comment\"></textarea>\n            </div>\n\n        </div>\n    </div>"
+module.exports = "<div class=\"col-md-5\">\n    <div class=\"card\" style=\"width: 30rem;\">\n        <h1>Comments # {{items.length}} </h1>\n        <div class=\"card-body\">\n\n            <ul class=\"commentList\" *ngFor=\"let comment of comments\">\n                <li>\n                    <div class=\"commenterImage\" id=\"square\">\n\n                    </div>\n                    <div class=\"commentText\">\n                        <p class=\"\">{{comment}}</p>\n                    </div>\n                </li>\n            </ul>\n            <div class=\"commenterImage\" id=\"square2\">\n\n            </div>\n            <div class=\"form-group\">\n                <textarea class=\"form-control\" [(ngModel)]=\"filterName\" #comment rows=\"3\" cols=\"40\" (keydown.control.enter)=\"addComment(comment.value)\" id=\"comment\"></textarea>\n            </div>\n\n        </div>\n    </div>"
 
 /***/ }),
 
@@ -87,17 +87,13 @@ var AppCommentsComponent = /** @class */ (function () {
         }
         else {
             this.subscription = this.getItems.getItem().subscribe(function (item) {
-                if (item.isActive === true) {
-                    _this.comments = item.comments;
-                }
-                else {
-                    _this.comments = [];
-                }
+                _this.comments = item.comments;
+                var items = JSON.parse(localStorage.getItem('items'));
+                item.filter(function (data) {
+                    console.log(data);
+                });
             });
         }
-    };
-    AppCommentsComponent.prototype.ngOnDestroy = function () {
-        this.subscription.unsubscribe();
     };
     AppCommentsComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -132,7 +128,7 @@ module.exports = "h1 {\n    margin-left: 4%;\n}\n\nbutton {\n    float: right;\n
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"col-md-5\">\n    <div class=\"card\" style=\"width: 30rem;\">\n\n        <h1>Items</h1>\n\n        <div class=\"input-group mb-2\">\n            <input type=\"text\" class=\"form-control\" #itemName [(ngModel)]='filterName' placeholder=\"Type name here...\" aria-describedby=\"basic-addon2\">\n            <div class=\"input-group-append\">\n                <button id=\"but\" class=\"btn btn-info\" type=\"button\" (click)=\"addNewItem(itemName.value)\">Add new</button>\n            </div>\n        </div>\n\n        <ul class=\"list-group list-group-flush\" *ngFor=\"let item of items\">\n            <li class=\"list-group-item\" (click)=\"selectItem(item)\" [ngClass]=\"{'itemActive' : selectedItem === item}\">{{item.name}}\n                <span class=\" badge badge-info badge-pill \">0</span>\n                <button type=\"button\" class=\"btn btn-outline-danger\" (click)=\"deleteItem(item)\">Delete</button>\n\n            </li>\n        </ul>\n    </div>\n</div>"
+module.exports = "<div class=\"col-md-5\">\n    <div class=\"card\" style=\"width: 30rem;\">\n\n        <h1>Items</h1>\n\n        <div class=\"input-group mb-2\">\n            <input type=\"text\" class=\"form-control\" #itemName [(ngModel)]='filterName' placeholder=\"Type name here...\" aria-describedby=\"basic-addon2\">\n            <div class=\"input-group-append\">\n                <button id=\"but\" class=\"btn btn-info\" type=\"button\" (click)=\"addNewItem(itemName.value)\">Add new</button>\n            </div>\n        </div>\n\n        <ul class=\"list-group list-group-flush\" *ngFor=\"let item of items\">\n            <li class=\"list-group-item\" (click)=\"selectItem(item)\" [ngClass] = \"item.isActive ? 'itemActive' : 'itemStatic'\">{{item.name}}\n                <span class=\" badge badge-info badge-pill \">{{item.comments.length}}</span>\n                <button type=\"button\" class=\"btn btn-outline-danger\" (click)=\"deleteItem(item)\">Delete</button>\n\n            </li>\n        </ul>\n    </div>\n</div>"
 
 /***/ }),
 
@@ -178,6 +174,7 @@ var AppItemsComponent = /** @class */ (function () {
             this.items.push({
                 'name': name,
                 'comments': [],
+                'isActive': false
             });
             localStorage.setItem('items', JSON.stringify(this.items));
             this.filterName = '';
@@ -189,27 +186,27 @@ var AppItemsComponent = /** @class */ (function () {
         localStorage.setItem('items', JSON.stringify(this.items));
     };
     AppItemsComponent.prototype.selectItem = function (item) {
-        item.isActive = !item.isActive;
+        this.items.filter(function (data) {
+            data.isActive = false;
+        });
+        item.isActive = true;
         this.getItems.setItem(item);
-        this.selectedItem = item;
         localStorage.setItem('items', JSON.stringify(this.items));
     };
     AppItemsComponent.prototype.ngOnInit = function () {
-        var _this = this;
         if (localStorage.getItem('items') === null) {
             this.items = [];
         }
         else {
-            var items = localStorage.getItem('items');
-            var parsedItems = JSON.parse(items);
-            this.items = parsedItems;
+            var items = JSON.parse(localStorage.getItem('items'));
+            this.items = items;
+            this.items.forEach(function (item) {
+                item.isActive = false;
+            });
         }
-        this.items.forEach(function (item) {
-            item.isActive = false;
-            localStorage.setItem('items', JSON.stringify(_this.items));
-        });
     };
     AppItemsComponent.prototype.ngOnDestroy = function () {
+        this.subscription.unsubscribe();
     };
     AppItemsComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -233,7 +230,7 @@ var AppItemsComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".left {\n    background-color: #3a1070;\n    color: white;\n    height: 650px;\n}\n\napp-app-items,\napp-app-comments {\n    margin-top: 1%;\n}"
+module.exports = ".left {\n    background-color: #3a1070;\n    color: white;\n    height: 100%;\n}\n\napp-app-items,\napp-app-comments {\n    margin-top: 1%;\n}\n\n.container-fluid {\n    height: 100%;\n}"
 
 /***/ }),
 
@@ -244,7 +241,7 @@ module.exports = ".left {\n    background-color: #3a1070;\n    color: white;\n  
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-fluid\">\n    <div class=\"row\">\n        <div class=\"col-md-2 left\">\n            <h1>Diary app</h1>\n            <h6>Comments with no sense</h6>\n        </div>\n        <app-app-items></app-app-items>\n        <app-app-comments></app-app-comments>\n    </div>\n</div>"
+module.exports = "<div class=\"container-fluid h-100\">\n    <div class=\"row justify-content-left h-100\">\n        <div class=\"col-md-2 left\">\n            <h1>Diary app</h1>\n            <h6>Comments with no sense</h6>\n        </div>\n        <app-app-items></app-app-items>\n        <app-app-comments></app-app-comments>\n    </div>\n</div>"
 
 /***/ }),
 
